@@ -7,7 +7,7 @@ Create a new pagescroller instance of a given container. This container should c
 const pageScroller = new PageScroller('page-container');
 ```
 Set properties:
-..* set easing function of all the page transitions
+⋅⋅* set easing function of all the page transitions
 ```javascript
 pageScroller.set({
 	easing: {
@@ -17,7 +17,7 @@ pageScroller.set({
 });
 ```
 
-..* set easing function of one the page transitions
+⋅⋅* set easing function of one the page transitions
 ```javascript
 pageScroller.set({
 	easing: {
@@ -26,8 +26,9 @@ pageScroller.set({
 		function: "easeOutCirc",
 	}
 });
+```
 
-..* Define an action after transitioning to another page
+⋅⋅* Define an action after transitioning to another page
 ```javascript
 pageScroller.set({
 	actionOn: {
@@ -37,9 +38,11 @@ pageScroller.set({
 		}
 	}
 });
+```
 
-..* Enable window reset to first page after refresh
+⋅⋅* Enable window reset to first page after refresh
 ```javascript
 pageScroller.set({
   reset: "true"
 })
+```
