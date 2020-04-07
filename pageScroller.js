@@ -3,7 +3,7 @@ Array.prototype.insert = function ( index, item ) {
 };
 
 class PageScroller {
-	constructor (PageScrollerId) {
+	constructor (PageScrollerId, minScreenHeight) {
 		this.pageScrollerContainer = document.getElementById(PageScrollerId);
 		this.pages = [...this.pageScrollerContainer.childNodes].filter((node) => node.nodeName === 'SECTION');
 
@@ -23,18 +23,33 @@ class PageScroller {
 
 		this.setPageStyling();
 
+		window.onresize = () => {
+			if (minScreenHeight < window.innerHeight) {
+				this.setPageStyling();
+			} else {
+				document.body.style.margin = '0';
+				document.body.style.overflow = 'visible';
+				this.pages.forEach((page) => {
+					page.style.height = `${minScreenHeight}px`;
+					page.style.width = '100vw';
+				});
+			}
+		};
+
 		document.addEventListener('wheel', (ev) =>{
-			ev.preventDefault();
-			let easingFunction; 
-			if (this.scrolling === false) {
-				if (this.checkScrollDirection(ev)) { // up
-					easingFunction = this.customSetEasingFunctionsUp[this.currentIndex] || this.defaultEasingFunction;
-					if (this.currentIndex > 0 ) this.currentIndex -= 1;
-				} else { // down
-					easingFunction = this.customSetEasingFunctionsDown[this.currentIndex] || this.defaultEasingFunction;
-					if (this.currentIndex < this.maxIndex - 1) this.currentIndex += 1;
+			if (minScreenHeight < window.innerHeight) {
+				ev.preventDefault();
+				let easingFunction; 
+				if (this.scrolling === false) {
+					if (this.checkScrollDirection(ev)) { // up
+						easingFunction = this.customSetEasingFunctionsUp[this.currentIndex] || this.defaultEasingFunction;
+						if (this.currentIndex > 0 ) this.currentIndex -= 1;
+					} else { // down
+						easingFunction = this.customSetEasingFunctionsDown[this.currentIndex] || this.defaultEasingFunction;
+						if (this.currentIndex < this.maxIndex - 1) this.currentIndex += 1;
+					}
+					this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction);
 				}
-				this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction);
 			}
 		})
 
