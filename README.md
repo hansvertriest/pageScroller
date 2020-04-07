@@ -22,7 +22,7 @@ pageScroller.set({
 pageScroller.set({
 	easing: {
 		from: "0",
-    to: "1",
+    		to: "1",
 		function: "easeOutCirc",
 	}
 });
