@@ -2,9 +2,9 @@
 Alternative to fullpage.js
 
 ## Usage
-Create a new pagescroller instance of a given container. This container should contain section-elements which will be the pages.
+Create a new pagescroller instance of a given container (container id) and a minimum screenheight for the effects to enable. This container should contain section-elements which will be the pages.
 ```javascript
-const pageScroller = new PageScroller('page-container');
+const pageScroller = new PageScroller('page-container', 400);
 ```
 Set properties:
 * set easing function of all the page transitions
