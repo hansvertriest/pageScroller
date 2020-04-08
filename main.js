@@ -13,3 +13,9 @@ pageScroller.set({
 	reset: 'true',
 	dragTreshold: 0.2,
 });
+
+const toTopBtn = document.getElementById('to-top-btn');
+
+toTopBtn.addEventListener('click', () => {
+	pageScroller.scrollToPage(0);
+});

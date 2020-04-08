@@ -82,7 +82,7 @@ class PageScroller {
 				}
 			} else if (Math.abs(this.touchDeltaY) < window.innerHeight * this.dragTreshold) {
 				const subDelta = this.touchPreviousMoveY - ev.touches[0].screenY;
-				this.scrollToY(window.pageYOffset + subDelta)
+				this.jumpToY(window.pageYOffset + subDelta)
 				this.touchPreviousMoveY = ev.touches[0].screenY;
 			}
 		})
@@ -95,7 +95,7 @@ class PageScroller {
 		})
 	}
 
-	scrollToY(yCoordinate) {
+	jumpToY(yCoordinate) {
 		window.scrollTo(0, yCoordinate);
 	}
 
@@ -151,6 +151,11 @@ class PageScroller {
 			return event.wheelDelta > 0;
 		}
 		return event.deltaY < 0;
+	}
+
+	scrollToPage(index, easingFunction = this.defaultEasingFunction) {
+		this.scrollToElement(this.pages[index], this.scrollDuration, easingFunction);
+		this.currentIndex = index;
 	}
 
 	set(props) {

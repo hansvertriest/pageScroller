@@ -53,3 +53,13 @@ pageScroller.set({
 	dragTreshold: 0.2
 })
 ```
+
+* When you want to scroll to a specific page, like a menu or a to top button, do as follows:
+```javascript
+const toTopBtn = document.getElementById('to-top-btn');
+
+toTopBtn.addEventListener('click', () => {
+	pageScroller.scrollToPage(0);
+});
+```
+Using a navigation for the pages is recommended as it allows the user to quickly scan the page without heving to wit for every animation.
