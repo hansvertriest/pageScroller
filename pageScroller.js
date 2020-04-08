@@ -127,12 +127,11 @@ class PageScroller {
 	setPageStyling() {
 		document.body.style.margin = '0';
 		document.body.style.overflow = 'hidden';
-		
 		this.pages.forEach((page) => {
 			page.style.height = '100vh';
 			page.style.width = '100vw';
 			page.style.padding = '0';
-			page.style.overflow = 'auto';
+			page.style.overflow = 'hidden';
 			page.style.boxSizing = 'border-box';
 		});
 	}
