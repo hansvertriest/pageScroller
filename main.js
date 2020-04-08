@@ -3,17 +3,13 @@ pageScroller.set({
 	easing: {
 		type: "all",
 		function: "easeOutQuart",
-	}
-});
-
-pageScroller.set({
+	},
 	actionOn: {
 		pageIndex: "1",
 		action: () => {
 			console.log('This could be an animation.')
 		}
-	}
+	},
+	reset: 'true',
+	dragTreshold: 0.2,
 });
-
-
-	pageScroller.set({reset: "true"})

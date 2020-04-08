@@ -46,3 +46,10 @@ pageScroller.set({
   reset: "true"
 })
 ```
+
+* When dragging the screen on mobile, set a percentage of the screenheight which is the treshold of when to go to the next screen or stay on the current one.
+```javascript
+pageScroller.set({
+	dragTreshold: 0.2
+})
+```

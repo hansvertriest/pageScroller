@@ -10,6 +10,13 @@ class PageScroller {
 		this.currentIndex = 0;
 		this.maxIndex = this.pages.length;
 
+		// touch variables
+		this.touchStartY = undefined;
+		this.touchMoveY = undefined;
+		this.touchDeltaY = undefined;
+		this.touchPreviousMoveY = undefined;
+		this.dragTreshold = 0.2;
+
 		this.defaultEasingFunction = 'easeOutQuad';
 		this.customSetEasingFunctionsDown = [];
 		this.customSetEasingFunctionsUp = [];
@@ -53,6 +60,43 @@ class PageScroller {
 			}
 		})
 
+		document.addEventListener('touchstart', (ev) => {
+			this.touchStartY = ev.touches[0].screenY;
+			this.touchPreviousMoveY = this.touchStartY;
+		});
+
+		document.addEventListener('touchmove', (ev) =>{
+			this.touchDeltaY = this.touchStartY - ev.touches[0].screenY; // + is scroll down, - scroll up
+			if (minScreenHeight < window.innerHeight && Math.abs(this.touchDeltaY) > window.innerHeight * this.dragTreshold ) {
+				ev.preventDefault();
+				let easingFunction; 
+				if (this.scrolling === false) {
+					if (this.touchDeltaY / Math.abs(this.touchDeltaY) === -1) { // up
+						easingFunction = this.customSetEasingFunctionsUp[this.currentIndex] || this.defaultEasingFunction;
+						if (this.currentIndex > 0 ) this.currentIndex -= 1;
+					} else { // down
+						easingFunction = this.customSetEasingFunctionsDown[this.currentIndex] || this.defaultEasingFunction;
+						if (this.currentIndex < this.maxIndex - 1) this.currentIndex += 1;
+					}
+					this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction);
+				}
+			} else if (Math.abs(this.touchDeltaY) < window.innerHeight * this.dragTreshold) {
+				const subDelta = this.touchPreviousMoveY - ev.touches[0].screenY;
+				this.scrollToY(window.pageYOffset + subDelta)
+				this.touchPreviousMoveY = ev.touches[0].screenY;
+			}
+		})
+
+		document.addEventListener('touchend', (ev) => {
+			if (Math.abs(this.touchDeltaY) < window.innerHeight * this.dragTreshold) {
+				const easingFunction = this.customSetEasingFunctionsDown[this.currentIndex] || this.defaultEasingFunction;
+				this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction);
+			}
+		})
+	}
+
+	scrollToY(yCoordinate) {
+		window.scrollTo(0, yCoordinate);
 	}
 
 	scrollToElement(element, duration, easingFunction) { 
@@ -83,13 +127,13 @@ class PageScroller {
 	setPageStyling() {
 		document.body.style.margin = '0';
 		document.body.style.overflow = 'hidden';
+		
 		this.pages.forEach((page) => {
 			page.style.height = '100vh';
 			page.style.width = '100vw';
-		
-		// Only for testing
-		// 	page.style.backgroundColor = 'red';
-		// 	page.style.border = '2px solid blue';
+			page.style.padding = '0';
+			page.style.overflow = 'auto';
+			page.style.boxSizing = 'border-box';
 		});
 	}
 
@@ -129,6 +173,10 @@ class PageScroller {
 
 		if (props.reset === "true") {
 			this.scrollToElement(this.pages[0], 0, 'linearTween')
+		}
+
+		if (props.dragTreshold) {
+			this.dragTreshold = props.dragTreshold;
 		}
 	}
 }
