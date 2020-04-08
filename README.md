@@ -1,5 +1,6 @@
 # pageScroller
 Alternative to fullpage.js
+Demo: https://hansvertriest.github.io/pageScroller/
 
 ## Usage
 Create a new pagescroller instance of a given container (container id) and a minimum screenheight for the effects to enable. This container should contain section-elements which will be the pages.
