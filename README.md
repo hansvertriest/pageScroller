@@ -34,6 +34,7 @@ pageScroller.set({
 	],
 });
 ```
+Ommiting the 'to' property will apply the easing function when scrolling up and down from the page specified in 'from'.
 
 * Define an action after transitioning to another page
 ```javascript
@@ -75,6 +76,7 @@ pageScroller.set({
 	]
 })
 ```
+Ommiting the 'to' property will apply the transition when scrolling up and down from the page specified in 'from'.
 
 * When you want to scroll to a specific page, like a menu or a to top button, do as follows:
 ```javascript

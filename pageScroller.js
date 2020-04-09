@@ -185,8 +185,13 @@ class PageScroller {
 		if (props.easing) {
 			props.easing.forEach((entry) => {
 				const { from, to, func } = entry;
-				if (from < to) this.customSetEasingFunctionsDown.insert(parseInt(from), func);
-				if (from > to) this.customSetEasingFunctionsUp.insert(parseInt(to), func);
+				if (to) {
+					if (from < to) this.customSetEasingFunctionsDown.insert(parseInt(from), func);
+					if (from > to) this.customSetEasingFunctionsUp.insert(parseInt(from), func);
+				} else {
+					this.customSetEasingFunctionsDown.insert(parseInt(from), func);
+					this.customSetEasingFunctionsUp.insert(parseInt(from), func);
+				}
 				console.log(this.customSetEasingFunctionsDown)
 			});
 		}
@@ -195,10 +200,6 @@ class PageScroller {
 				const { pageIndex, action } = entry;
 				this.pageFunctions.insert(parseInt(pageIndex), action);
 			});
-		}
-		if (props.actionAfter) {
-			this.customSetEasingFunctionsDown.insert(props.easing.from.toString(10), props.easing.callback);
-			this.customSetEasingFunctionsUp.insert(props.easing.to.toString(10), props.easing.callback);
 		}
 
 		if (props.reset === "true") {
@@ -212,8 +213,13 @@ class PageScroller {
 		if (props.whileTransitioning) {
 			props.whileTransitioning.forEach((entry) => {
 				const { from, to, callback } = entry;
-				if (from < to) this.customTransitionFunctionsDown.insert(from, callback);
-				if (from > to) this.customTransitionFunctionsUp.insert(from, callback);
+				if (to) {
+					if (from < to) this.customTransitionFunctionsDown.insert(from, callback);
+					if (from > to) this.customTransitionFunctionsUp.insert(from, callback);
+				} else {
+					this.customTransitionFunctionsDown.insert(from, callback);
+					this.customTransitionFunctionsUp.insert(from, callback);
+				}
 			});
 		}
 	}

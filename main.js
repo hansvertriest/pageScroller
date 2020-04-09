@@ -5,13 +5,13 @@ pageScroller.set({
 	},
 	easing: [
 		{
-			from: '0',
-			to: '1',
+			from: '1',
+			to: '0',
 			func: 'linearTween'
 		},
 		{
-			from: '1',
-			to: '2',
+			from: '2',
+			// to: '2',
 			func: 'easeInOutQuart',
 		}
 	],
@@ -27,9 +27,14 @@ pageScroller.set({
 	dragTreshold: 0.2,
 	whileTransitioning: [
 		{
-			from: '2',
+			from: '0',
 			to: '1',
-			callback: () => console.log('This happens while transitioning from section 2 to 1.'),
+			callback: () => console.log('This happens while transitioning from section 1 to 0.'),
+		},
+		{
+			from: '2',
+			// to: '1',
+			callback: () => console.log('This happens while transitioning from section 2.'),
 		}
 	]
 });
