@@ -11,33 +11,41 @@ Set properties:
 * set easing function of all the page transitions
 ```javascript
 pageScroller.set({
-	easing: {
-		type: "all",
-		function: "easeOutCirc",
-	}
+	easingForAll: {
+		func: "easeOutQuart",
+	},
 });
 ```
 
 * set easing function of one the page transitions
 ```javascript
 pageScroller.set({
-	easing: {
-		from: "0",
-    		to: "1",
-		function: "easeOutCirc",
-	}
+	easing: [
+		{
+			from: '0',
+			to: '1',
+			func: 'linearTween'
+		},
+		{
+			from: '1',
+			to: '2',
+			func: 'easeInOutQuart',
+		}
+	],
 });
 ```
 
 * Define an action after transitioning to another page
 ```javascript
 pageScroller.set({
-	actionOn: {
-		pageIndex: "1",
-		action: () => {
-			console.log('This could be an animation.')
+	actionOn: [
+		{
+			pageIndex: "1",
+			action: () => {
+				console.log('This could be an animation happening on section 1.')
+			},
 		}
-	}
+	],
 });
 ```
 
@@ -52,6 +60,19 @@ pageScroller.set({
 ```javascript
 pageScroller.set({
 	dragTreshold: 0.2
+})
+```
+
+* Adding an action when a transition start is as follows:
+```javascript
+pageScroller.set({
+	whileTransitioning: [
+		{
+			from: '2',
+			to: '1',
+			callback: () => console.log('This happens while transitioning from section 2 to 1.'),
+		}
+	]
 })
 ```
 

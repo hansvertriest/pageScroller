@@ -54,18 +54,18 @@ class PageScroller {
 			if (minScreenHeight < window.innerHeight) {
 				ev.preventDefault();
 				let easingFunction; 
-				let whenArrivedFunction;
+				let whileTransitioningFunction;
 				if (this.scrolling === false) {
 					if (this.checkScrollDirection(ev)) { // up
 						easingFunction = this.customSetEasingFunctionsUp[this.currentIndex] || this.defaultEasingFunction;
-						whenArrivedFunction = this.customTransitionFunctionsUp[this.currentIndex];
+						whileTransitioningFunction = this.customTransitionFunctionsUp[this.currentIndex];
 						if (this.currentIndex > 0 ) this.currentIndex -= 1;
 					} else { // down
 						easingFunction = this.customSetEasingFunctionsDown[this.currentIndex] || this.defaultEasingFunction;
-						whenArrivedFunction = this.customTransitionFunctionsDown[this.currentIndex];
+						whileTransitioningFunction = this.customTransitionFunctionsDown[this.currentIndex];
 						if (this.currentIndex < this.maxIndex - 1) this.currentIndex += 1;
 					}
-					this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction, whenArrivedFunction);
+					this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction, whileTransitioningFunction);
 				}
 			}
 		})
@@ -80,18 +80,18 @@ class PageScroller {
 			if (minScreenHeight < window.innerHeight && Math.abs(this.touchDeltaY) > window.innerHeight * this.dragTreshold ) {
 				ev.preventDefault();
 				let easingFunction; 
-				let whenArrivedFunction;
+				let whileTransitioningFunction;
 				if (this.scrolling === false) {
 					if (this.touchDeltaY / Math.abs(this.touchDeltaY) === -1) { // up
 						easingFunction = this.customSetEasingFunctionsUp[this.currentIndex] || this.defaultEasingFunction;
-						whenArrivedFunction = this.customTransitionFunctionsUp[this.currentIndex];
+						whileTransitioningFunction = this.customTransitionFunctionsUp[this.currentIndex];
 						if (this.currentIndex > 0 ) this.currentIndex -= 1;
 					} else { // down
 						easingFunction = this.customSetEasingFunctionsDown[this.currentIndex] || this.defaultEasingFunction;
-						whenArrivedFunction = this.customTransitionFunctionsDown[this.currentIndex];
+						whileTransitioningFunction = this.customTransitionFunctionsDown[this.currentIndex];
 						if (this.currentIndex < this.maxIndex - 1) this.currentIndex += 1;
 					}
-					this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction, whenArrivedFunction);
+					this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction, whileTransitioningFunction);
 				}
 			} else if (Math.abs(this.touchDeltaY) < window.innerHeight * this.dragTreshold) {
 				const subDelta = this.touchPreviousMoveY - ev.touches[0].screenY;
@@ -112,15 +112,15 @@ class PageScroller {
 		window.scrollTo(0, yCoordinate);
 	}
 
-	scrollToElement(element, duration, easingFunction, whenArrivedFunction = undefined) { 
+	scrollToElement(element, duration, easingFunction, whileTransitioningFunction = undefined) { 
 		this.scrolling = true;
 		const elementY = element.offsetTop;
 		const startingY = window.pageYOffset;
 		const deltaY = elementY - startingY;
 		let start;
-	  
+		console.log(easingFunction);
 		const animation = new Promise((resolve) => {
-			if (whenArrivedFunction) whenArrivedFunction();
+			if (whileTransitioningFunction) whileTransitioningFunction();
 			window.requestAnimationFrame(function step(timestamp) {
 				if (!start) start = timestamp;
 				const elapsed = timestamp - start;
@@ -177,17 +177,24 @@ class PageScroller {
 	}
 
 	set(props) {
+		if (props.easingForAll) {
+			this.customSetEasingFunctionsDown = this.customSetEasingFunctionsDown.map((func) => props.easingForAll.func);
+			this.customSetEasingFunctionsUp = this.customSetEasingFunctionsUp.map((func) => props.easingForAll.func);
+			console.log(this.customSetEasingFunctionsDown);
+		}
 		if (props.easing) {
-			if (props.easing.type === '1') {
-				this.customSetEasingFunctionsDown.insert(props.easing.from.toString(10), props.easing.function);
-				this.customSetEasingFunctionsUp.insert(props.easing.to.toString(10), props.easing.function);
-			} else if (props.easing.type = 'all') {
-				this.customSetEasingFunctionsDown = this.customSetEasingFunctionsDown.map((func) => props.easing.function);
-				this.customSetEasingFunctionsUp = this.customSetEasingFunctionsUp.map((func) => props.easing.function);
-			}
+			props.easing.forEach((entry) => {
+				const { from, to, func } = entry;
+				if (from < to) this.customSetEasingFunctionsDown.insert(parseInt(from), func);
+				if (from > to) this.customSetEasingFunctionsUp.insert(parseInt(to), func);
+				console.log(this.customSetEasingFunctionsDown)
+			});
 		}
 		if (props.actionOn) {
-			this.pageFunctions.insert(props.actionOn.pageIndex.toString(10), props.actionOn.action);
+			props.actionOn.forEach((entry) => {
+				const { pageIndex, action } = entry;
+				this.pageFunctions.insert(parseInt(pageIndex), action);
+			});
 		}
 		if (props.actionAfter) {
 			this.customSetEasingFunctionsDown.insert(props.easing.from.toString(10), props.easing.callback);
@@ -202,10 +209,12 @@ class PageScroller {
 			this.dragTreshold = props.dragTreshold;
 		}
 
-		if (props.whenArrived) {
-			const { from, to, callback } = props.whenArrived;
-			if (from < to) this.customTransitionFunctionsDown.insert(from, callback);
-			if (from > to) this.customTransitionFunctionsUp.insert(from, callback);
+		if (props.whileTransitioning) {
+			props.whileTransitioning.forEach((entry) => {
+				const { from, to, callback } = entry;
+				if (from < to) this.customTransitionFunctionsDown.insert(from, callback);
+				if (from > to) this.customTransitionFunctionsUp.insert(from, callback);
+			});
 		}
 	}
 }
