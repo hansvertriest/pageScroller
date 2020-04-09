@@ -118,7 +118,6 @@ class PageScroller {
 		const startingY = window.pageYOffset;
 		const deltaY = elementY - startingY;
 		let start;
-		console.log(easingFunction);
 		const animation = new Promise((resolve) => {
 			if (whileTransitioningFunction) whileTransitioningFunction();
 			window.requestAnimationFrame(function step(timestamp) {
@@ -180,7 +179,6 @@ class PageScroller {
 		if (props.easingForAll) {
 			this.customSetEasingFunctionsDown = this.customSetEasingFunctionsDown.map((func) => props.easingForAll.func);
 			this.customSetEasingFunctionsUp = this.customSetEasingFunctionsUp.map((func) => props.easingForAll.func);
-			console.log(this.customSetEasingFunctionsDown);
 		}
 		if (props.easing) {
 			props.easing.forEach((entry) => {
@@ -192,7 +190,6 @@ class PageScroller {
 					this.customSetEasingFunctionsDown.insert(parseInt(from), func);
 					this.customSetEasingFunctionsUp.insert(parseInt(from), func);
 				}
-				console.log(this.customSetEasingFunctionsDown)
 			});
 		}
 		if (props.actionOn) {
