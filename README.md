@@ -78,6 +78,26 @@ pageScroller.set({
 ```
 Ommiting the 'to' property will apply the transition when scrolling up and down from the page specified in 'from'.
 
+* Adding an action before a transition start is as follows. Callback should always return a promise.
+```javascript
+pageScroller.set({
+	beforeTransitioning: [
+		{
+			from: '1',
+			to: '0',
+			callback: () => {
+				return new Promise((resolve) => {
+					console.log('This is before the transition from 0 to 1.')
+					setTimeout(() => {						
+						resolve();
+					},3000)
+				});
+			},
+		},
+	]
+})
+```
+
 * When you want to scroll to a specific page, like a menu or a to top button, do as follows:
 ```javascript
 const toTopBtn = document.getElementById('to-top-btn');

@@ -36,6 +36,20 @@ pageScroller.set({
 			// to: '1',
 			callback: () => console.log('This happens while transitioning from section 2.'),
 		}
+	],
+	beforeTransitioning: [
+		{
+			from: '1',
+			to: '0',
+			callback: () => {
+				return new Promise((resolve) => {
+					console.log('This is before the transition from 0 to 1.')
+					setTimeout(() => {						
+						resolve();
+					},3000)
+				});
+			},
+		},
 	]
 });
 
