@@ -194,9 +194,23 @@ class PageScroller {
 		return event.deltaY < 0;
 	}
 
-	scrollToPage(index, easingFunction = this.defaultEasingFunction) {
-		this.scrollToElement(this.pages[index], this.scrollDuration, easingFunction);
-		this.currentIndex = index;
+	scrollToPage(index, easingFunction = this.defaultEasingFunction) { 
+		let whileTransitioningFunction;
+		let beforeTransitioningFunction;
+		if (this.scrolling === false) {
+			if (this.currentIndex > index) { // up
+				easingFunction = this.customSetEasingFunctionsUp[this.currentIndex] || this.defaultEasingFunction;
+				whileTransitioningFunction = this.customTransitionFunctionsUp[this.currentIndex];
+				beforeTransitioningFunction = this.customBeforeTransitionFunctionsUp[this.currentIndex];
+				if (index > 0 && index < this.maxIndex ) this.currentIndex = index;
+			} else { // down
+				easingFunction = this.customSetEasingFunctionsDown[this.currentIndex] || this.defaultEasingFunction;
+				whileTransitioningFunction = this.customTransitionFunctionsDown[this.currentIndex];
+				beforeTransitioningFunction = this.customBeforeTransitionFunctionsDown[this.currentIndex];
+				if (index > 0 && index < this.maxIndex ) this.currentIndex = index;
+			}
+			this.scrollToElement(this.pages[this.currentIndex], this.scrollDuration, easingFunction, whileTransitioningFunction, beforeTransitioningFunction);
+		}
 	}
 
 	set(props) {
